@@ -90,8 +90,6 @@ export class GamesRepository implements IGamesRepository {
         title: data.title,
         description: data.description,
         short_description: data.short_description,
-        thumbnail_url: data.thumbnail_url,
-        header_image_url: data.header_image_url,
         page_url: data.page_url,
         is_free: data.is_free,
         price: data.price,

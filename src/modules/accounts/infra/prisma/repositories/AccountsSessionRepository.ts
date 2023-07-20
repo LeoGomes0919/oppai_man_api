@@ -31,6 +31,7 @@ export class AccountsSessionRepository implements IAccountsSessionRepository {
       where: {
         user_id,
         refresh_token,
+        deleted_at: null,
       },
     })
 

@@ -12,17 +12,17 @@
     }
   ],
   "paths": {
-    "/users": {
+    "/accounts": {
       "post": {
         "tags": [
-          "User"
+          "Account"
         ],
-        "summary": "Create a new user",
+        "summary": "Create a new account",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/Account"
               }
             }
           }
@@ -42,11 +42,99 @@
           }
         }
       }
+    },
+    "/accounts/profile": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get account profile",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/sessions": {
+      "post": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Create a new session",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Session"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/sessions/refresh-token": {
+      "post": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Refresh token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "token"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
-      "User": {
+      "Account": {
         "type": "object",
         "properties": {
           "name": {
@@ -83,6 +171,28 @@
           "password_confirmation": "12345678",
           "role": "CUSTOMER"
         }
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
