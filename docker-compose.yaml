@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  mysql:
+    image: bitnami/mysql:5.7
+    container_name: mysql
+    restart: always
+    tty: true
+    networks:
+      - oppai-man
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - mysql:/data/mysql
+      - ./docker/mysql/scripts:/docker-entrypoint-initdb.d
+
+  app:
+    build: .
+    container_name: app
+    entrypoint: dockerize -wait tcp://mysql:3306 -timeout 60s npm run dev:docker
+    restart: always
+    tty: true
+    networks:
+      - oppai-man
+    ports:
+      - ${PORT}:3333
+    volumes:
+      - .:/usr/app
+    depends_on:
+      - mysql
+
+volumes:
+  mysql:
+    driver: local
+
+networks:
+  oppai-man:
+    driver: bridge

@@ -1,0 +1,195 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum StatusOrder {
+  AWAITING_PAYMENT
+  PAID
+  CANCELED
+}
+
+enum Role {
+  DEVELOPER
+  CUSTOMER
+}
+
+enum OperationalSystem {
+  WINDOWS
+  LINUX
+  MAC
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  password     String
+  role         Role
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  deleted_at   DateTime?
+  developer    Developer?
+  customer     Customer?
+  user_session UserSession[]
+  order        Order[]
+
+  @@map("users")
+}
+
+model Developer {
+  id         String    @id @default(uuid())
+  name       String
+  user_id    String    @unique
+  user       User      @relation(fields: [user_id], references: [id])
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+  games      Game[]
+
+  @@map("developers")
+}
+
+model Customer {
+  id         String    @id @default(uuid())
+  name       String
+  user_id    String    @unique
+  user       User      @relation(fields: [user_id], references: [id])
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime?
+
+  @@map("customers")
+}
+
+model Genre {
+  id         String      @id @default(uuid())
+  name       String      @unique
+  created_at DateTime    @default(now())
+  deleted_at DateTime?
+  game_genre GameGenre[]
+
+  @@map("genres")
+}
+
+model UserSession {
+  id            String   @id @default(uuid())
+  user_id       String
+  user          User     @relation(fields: [user_id], references: [id])
+  refresh_token String   @db.Text
+  expires_at    DateTime
+  created_at    DateTime @default(now())
+
+  @@map("user_sessions")
+}
+
+model Game {
+  id                    String                @id @default(uuid())
+  title                 String
+  short_description     String?               @db.Text
+  description           String                @db.Text
+  developer_id          String
+  developer             Developer             @relation(fields: [developer_id], references: [id])
+  thumbnail_url         String
+  header_image_url      String
+  page_url              String
+  is_free               Boolean
+  price                 Float
+  created_at            DateTime              @default(now())
+  updated_at            DateTime              @updatedAt
+  deleted_at            DateTime?
+  game_genre            GameGenre[]
+  game_operating_system GameOperatingSystem[]
+  game_build            GameBuild[]
+  order_item            OrderItem[]
+  game_screenshot_file  GameScreenshotFile[]
+
+  @@map("games")
+}
+
+model GameGenre {
+  id         String    @id @default(uuid())
+  game_id    String
+  genre_id   String
+  game       Game      @relation(fields: [game_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  genre      Genre     @relation(fields: [genre_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  created_at DateTime  @default(now())
+  deleted_at DateTime?
+
+  @@map("game_genres")
+}
+
+model GameOperatingSystem {
+  id               String            @id @default(uuid())
+  game_id          String
+  game             Game              @relation(fields: [game_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  operating_system OperationalSystem
+  created_at       DateTime          @default(now())
+  deleted_at       DateTime?
+
+  @@map("game_operating_systems")
+}
+
+model GameBuild {
+  id           String    @id @default(uuid())
+  game_id      String
+  game         Game      @relation(fields: [game_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  version      String
+  build_number String
+  size         String
+  is_active    Boolean
+  created_at   DateTime  @default(now())
+  deleted_at   DateTime?
+
+  @@map("game_builds")
+}
+
+model GameScreenshotFile {
+  id         String   @id @default(uuid())
+  game_id    String
+  game       Game     @relation(fields: [game_id], references: [id])
+  file_url   String
+  created_at DateTime @default(now())
+
+  @@map("game_screenshot_files")
+}
+
+model Order {
+  id             String        @id @default(uuid())
+  user_id        String
+  total          Float
+  status         StatusOrder   @default(AWAITING_PAYMENT)
+  payment_method PaymentMethod
+  user           User          @relation(fields: [user_id], references: [id])
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
+  order_item     OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id         String   @id @default(uuid())
+  order_id   String
+  game_id    String
+  price      Float
+  quantity   Int
+  is_free    Boolean? @default(false)
+  total      Float
+  order      Order    @relation(fields: [order_id], references: [id])
+  game       Game     @relation(fields: [game_id], references: [id])
+  created_at DateTime @default(now())
+
+  @@map("order_items")
+}

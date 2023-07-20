@@ -1,0 +1,89 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OppaiMan API",
+    "description": "This is an API OppaiMan",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333/api",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Create a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "409": {
+            "description": "User already exists"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "password_confirmation": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "DEVELOPER",
+              "CUSTOMER"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password",
+          "password_confirmation",
+          "role"
+        ],
+        "example": {
+          "name": "OppaiMan",
+          "email": "user@oppaiman.com",
+          "password": "12345678",
+          "password_confirmation": "12345678",
+          "role": "CUSTOMER"
+        }
+      }
+    }
+  }
+}
