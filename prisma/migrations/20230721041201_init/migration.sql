@@ -56,6 +56,7 @@ CREATE TABLE `user_sessions` (
     `refresh_token` TEXT NOT NULL,
     `expires_at` DATETIME(3) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `deleted_at` DATETIME(3) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -67,9 +68,9 @@ CREATE TABLE `games` (
     `short_description` TEXT NULL,
     `description` TEXT NOT NULL,
     `developer_id` VARCHAR(191) NOT NULL,
-    `thumbnail_url` VARCHAR(191) NOT NULL,
-    `header_image_url` VARCHAR(191) NOT NULL,
-    `page_url` VARCHAR(191) NOT NULL,
+    `thumbnail_url` VARCHAR(191) NULL,
+    `header_image_url` VARCHAR(191) NULL,
+    `page_url` VARCHAR(191) NULL,
     `is_free` BOOLEAN NOT NULL,
     `price` DOUBLE NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),

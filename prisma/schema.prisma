@@ -102,9 +102,9 @@ model Game {
   description           String                @db.Text
   developer_id          String
   developer             Developer             @relation(fields: [developer_id], references: [id])
-  thumbnail_url         String
-  header_image_url      String
-  page_url              String
+  thumbnail_url         String?
+  header_image_url      String?
+  page_url              String?
   is_free               Boolean
   price                 Float
   created_at            DateTime              @default(now())

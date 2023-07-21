@@ -14,9 +14,7 @@ interface IRequest {
   build_number: string
   version: string
   size: string
-  thumbnail_url: string
-  header_image_url: string
-  page_url: string
+  page_url?: string
   is_free: boolean
   price: number
 }
@@ -30,7 +28,7 @@ export class CreateGameService {
     private accountsRepository: IAccountsRepository,
   ) {}
 
-  async execute(data: IRequest): Promise<{ id: string; page_url: string }> {
+  async execute(data: IRequest): Promise<{ id: string }> {
     const account = await this.accountsRepository.findById(data.developer_id)
 
     if (!account?.developer) {
@@ -45,13 +43,13 @@ export class CreateGameService {
 
     const dataAssingValue = Object.assign(data, {
       developer_id: account.developer.id,
+      page_url: data.page_url,
     })
 
     const game = await this.gamesRepository.create(dataAssingValue)
 
     return {
       id: game.id,
-      page_url: game.page_url,
     }
   }
 }

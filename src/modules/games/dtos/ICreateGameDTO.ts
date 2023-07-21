@@ -14,9 +14,7 @@ export interface ICreateGameDTO {
   build_number: string
   version: string
   size: string
-  thumbnail_url: string
-  header_image_url: string
-  page_url: string
+  page_url?: string
   is_free: boolean
   price: number
 }

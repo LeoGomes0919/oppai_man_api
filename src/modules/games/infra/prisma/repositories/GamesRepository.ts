@@ -32,9 +32,7 @@ export class GamesRepository implements IGamesRepository {
     return games
   }
 
-  async create(
-    data: ICreateGameDTO,
-  ): Promise<{ id: string; page_url: string }> {
+  async create(data: ICreateGameDTO): Promise<{ id: string }> {
     const game = await prisma.game.create({
       data: {
         title: data.title,
@@ -45,9 +43,7 @@ export class GamesRepository implements IGamesRepository {
             id: data.developer_id,
           },
         },
-        thumbnail_url: data.thumbnail_url,
-        header_image_url: data.header_image_url,
-        page_url: data.page_url,
+        page_url: data?.page_url,
         is_free: data.is_free,
         price: data.price,
         game_genre: {
@@ -77,7 +73,6 @@ export class GamesRepository implements IGamesRepository {
 
     return {
       id: game.id,
-      page_url: game.page_url,
     }
   }
 
@@ -324,7 +319,7 @@ export class GamesRepository implements IGamesRepository {
       meta: {
         total,
         total_pages: Math.ceil(total / take) || 0,
-        page: Math.ceil(skip / take) + 1 || 0,
+        page: Math.ceil(skip / take) || 0,
         per_page: take || 0,
       },
     }
@@ -369,8 +364,10 @@ export class GamesRepository implements IGamesRepository {
       query.AND.push({
         game_genre: {
           some: {
-            genre_id: {
-              in: genres,
+            genre: {
+              name: {
+                in: genres,
+              },
             },
           },
         },

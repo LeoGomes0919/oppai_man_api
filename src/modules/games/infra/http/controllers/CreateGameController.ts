@@ -18,16 +18,14 @@ export class CreateGameController {
       version: z.string().nonempty('Version is required'),
       is_free: z.boolean().default(false),
       price: z.number().min(0.0).default(0.0),
+      page_url: z.string().optional(),
     })
 
     const data = registerBodySchema.parse(req.body)
 
     const dataAssingValue = Object.assign(data, {
       developer_id: req.account.id,
-      size: '0',
-      thumbnail_url: 'https://via.placeholder.com/512x512',
-      header_image_url: 'https://via.placeholder.com/600x200',
-      page_url: 'https://via.placeholder.com/600x200',
+      size: '1GB',
     })
 
     try {
@@ -39,7 +37,6 @@ export class CreateGameController {
         message: 'Game created successfully',
         data: {
           id: game.id,
-          page_url: game.page_url,
         },
       })
     } catch (err) {

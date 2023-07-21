@@ -23,31 +23,21 @@ const findAllWithFiltersController = new FindAllWithFiltersController()
 const findGameByIdController = new FindGameByIdController()
 const findAllByDeveloperController = new FindAllByDeveloperController()
 
-// Developer routes
-gamesRoutes.post(
-  '/',
-  ensureAuthenticated,
-  ensureDeveloper,
-  createGameController.handle,
-)
-gamesRoutes.put(
-  '/:id',
-  ensureAuthenticated,
-  ensureDeveloper,
-  updateGameController.handle,
-)
+// Public routes
+gamesRoutes.get('/', findAllWithFiltersController.handle)
+gamesRoutes.get('/:id', findGameByIdController.handle)
 
-gamesRoutes.delete(
-  '/:id',
-  ensureAuthenticated,
-  ensureDeveloper,
-  deleteGameController.handle,
-)
+// Developer routes
+gamesRoutes.use(ensureAuthenticated)
+gamesRoutes.use(ensureDeveloper)
+
+gamesRoutes.post('/', createGameController.handle)
+gamesRoutes.put('/:id', updateGameController.handle)
+
+gamesRoutes.delete('/:id', deleteGameController.handle)
 
 gamesRoutes.patch(
   '/upload/images/:id',
-  ensureAuthenticated,
-  ensureDeveloper,
   upload.fields([
     { name: 'thumbnail', maxCount: 1 },
     { name: 'header_image', maxCount: 1 },
@@ -56,15 +46,6 @@ gamesRoutes.patch(
   uploadGameImagesController.handle,
 )
 
-gamesRoutes.get(
-  '/my-games',
-  ensureAuthenticated,
-  ensureDeveloper,
-  findAllByDeveloperController.handle,
-)
-
-// Public routes
-gamesRoutes.get('/', findAllWithFiltersController.handle)
-gamesRoutes.get('/:id', findGameByIdController.handle)
+gamesRoutes.get('/my-games', findAllByDeveloperController.handle)
 
 export { gamesRoutes }

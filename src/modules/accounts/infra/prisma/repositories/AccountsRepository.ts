@@ -20,7 +20,7 @@ export class AccountsRepository implements IAccountsRepository {
         role,
         ...(role === Role.DEVELOPER
           ? { developer: { create: { name } } }
-          : { dustomer: { create: { name } } }),
+          : { customer: { create: { name } } }),
       },
       include: {
         developer: {

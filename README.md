@@ -53,8 +53,10 @@ yarn prisma:seed
 ````
 
 ## 🚀 Executando Aplicação
-> Caso esteja sem container Docker, execute a aplicação com o seguinte escript
+>Caso esteja sem container Docker, execute a aplicação com o seguinte escript
 ````
 yarn dev
 ````
-
+>O script executado anteriormente `yarn compose:build` já startou a API caso tenha executado no container docker.
+## 📄 Documentação
+>API possuí uma documentação criada com a biblioteca Swagger e pode ser acessada atrasvez da url `http://localhost:3333/api/docs`

@@ -8,6 +8,7 @@ import { AppError } from '@/shared/errors/AppError'
 import { PaymentMethod, PurchaseStatus } from '../dtos/ICreatePurchaseDTO'
 import { IPaymentProvider } from '@/shared/container/providers/PaymentProvider/IPaymentProvider'
 import { pathFiles } from '@/utils/pathFiles'
+import { env } from '@/shared/env'
 
 interface IRequest {
   user_id: string
@@ -68,17 +69,21 @@ export class CreatePurchaseService {
           ...item,
           game: {
             ...item.game,
-            thumbnail_url: pathFiles('thumbnail', item.game.thumbnail_url),
+            thumbnail_url: item.game.thumbnail_url
+              ? pathFiles('thumbnail', item.game.thumbnail_url)
+              : '',
           },
         })),
       },
     }
 
-    if (!game.is_free) {
+    if (!game.is_free || env.PAYMENT_PROVIDER !== 'local') {
       const product = {
         id: game.id,
         amount: game.price,
-        thumbnail: pathFiles('thumbnail', game.thumbnail_url),
+        thumbnail: game.thumbnail_url
+          ? pathFiles('thumbnail', game.thumbnail_url)
+          : '',
         title: game.title,
       }
       const payment = await this.paymentProvider.createPayment(product)

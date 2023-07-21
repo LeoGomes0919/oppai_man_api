@@ -16,14 +16,28 @@ export interface IPurchaseResponse {
     total: number
     game: {
       title: string
-      thumbnail_url: string
+      thumbnail_url: string | null
     }
   }[]
 }
 
+export interface IPurchaseResponsePagination {
+  data: IPurchaseResponse[]
+  meta: {
+    total: number
+    total_pages: number
+    page: number
+    per_page: number
+  }
+}
+
 export interface IPurchasesRepository {
   create(data: ICreatePurchaseDTO): Promise<IPurchaseResponse>
-  findAllByUserId(user_id: string): Promise<IPurchaseResponse[]>
+  findAllByUserId(
+    user_id: string,
+    page: string,
+    limit: string,
+  ): Promise<IPurchaseResponsePagination>
   updateStatus(id: string, status: PurchaseStatus): Promise<void>
   findById(id: string): Promise<IPurchaseResponse | null>
 }

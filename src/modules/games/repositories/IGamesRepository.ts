@@ -28,9 +28,9 @@ export interface IGameResponse {
   description: string
   short_description: string | null
   developer_id?: string
-  thumbnail_url: string
-  header_image_url: string
-  page_url: string
+  thumbnail_url: string | null
+  header_image_url: string | null
+  page_url?: string | null
   is_free: boolean
   price: number
   created_at: Date
@@ -52,9 +52,9 @@ export interface IGameResponse {
 export interface IGameLibraryResponse {
   id: string
   title: string
-  thumbnail_url: string
+  thumbnail_url: string | null
   price: number
-  page_url: string
+  page_url?: string | null
   is_free: boolean | null
   created_at: Date
 }
@@ -63,8 +63,8 @@ export interface IGameResponseById {
   id: string
   title: string
   price: number
-  thumbnail_url: string
-  header_image_url: string
+  thumbnail_url: string | null
+  header_image_url: string | null
   is_free: boolean
   developer: {
     id: string
@@ -79,7 +79,7 @@ export interface IGameResponseById {
 
 export interface IFilterGame {
   title?: string
-  genres?: string[]
+  genres?: string[] | string
   start_date?: Date
   end_date?: Date
   price_min?: number
@@ -90,9 +90,9 @@ export interface IFilterGame {
 }
 
 export interface IUpdateFiles {
-  thumbnail_url?: string
-  header_image_url?: string
-  screenshots?: string[]
+  thumbnail_url: string | null
+  header_image_url: string | null
+  screenshots: string[] | undefined
 }
 
 export interface IGameResponseFilter {
@@ -113,7 +113,7 @@ export interface IUserTypeLibrary {
 }
 
 export interface IGamesRepository {
-  create(data: ICreateGameDTO): Promise<{ id: string; page_url: string }>
+  create(data: ICreateGameDTO): Promise<{ id: string }>
   update(id: string, data: IUpdateGameDTO): Promise<void>
   delete(id: string): Promise<void>
   findById(id: string): Promise<IGameResponseById | null>

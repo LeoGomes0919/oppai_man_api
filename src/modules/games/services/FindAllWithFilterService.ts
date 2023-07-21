@@ -9,7 +9,7 @@ import { GameMap } from '../mapper/GameMap'
 
 interface IRequest {
   title?: string
-  genres?: string[]
+  genres?: string
   range_days?: number
   price_min?: number
   price_max?: number
@@ -35,18 +35,16 @@ export class FindAllWithFilterService {
 
     if (filterParsed.range_days) {
       const date = this.dateProvider.subtractDays(filterParsed.range_days)
-      Object.assign(filters, {
+      Object.assign(filterParsed, {
         start_date: date.startOf,
         end_date: date.endOf,
       })
     }
 
     if (filterParsed.genres) {
-      filterParsed.genres = JSON.stringify(filterParsed.genres)
-        .replace(/['"]/g, '')
-        .replace(/[[\]]+/g, '')
-        .replace(/[/\\/]/g, '')
-        .split(/\s*,\s*/)
+      Object.assign(filterParsed, {
+        genres: filterParsed.genres.split(','),
+      })
     }
 
     delete filterParsed.range_days

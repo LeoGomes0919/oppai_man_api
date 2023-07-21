@@ -3,6 +3,7 @@ import 'reflect-metadata'
 import 'express-async-errors'
 import '../../container'
 import express, { NextFunction, Request, Response } from 'express'
+import cors from 'cors'
 import swaggerUi from 'swagger-ui-express'
 
 import swaggerSetup from '@/swagger.json'
@@ -10,9 +11,9 @@ import { ZodError } from 'zod'
 import { Prisma } from '@prisma/client'
 import { routes } from './routes'
 import { AppError } from '@/shared/errors/AppError'
-import Stripe from 'stripe'
 
 const app = express()
+app.use(cors())
 
 app.use(express.json())
 

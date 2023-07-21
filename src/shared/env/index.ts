@@ -21,7 +21,7 @@ const envSchema = z.object({
   AWS_BUCKET_URL: z.string(),
   APP_API_URL: z.string(),
   PAYMENT_SECRET_KEY: z.string(),
-  PAYMENT_PROVIDER: z.enum(['stripe']).default('stripe'),
+  PAYMENT_PROVIDER: z.enum(['stripe', 'local']).default('local'),
   WEBHOOK_SECRET: z.string(),
 })
 
